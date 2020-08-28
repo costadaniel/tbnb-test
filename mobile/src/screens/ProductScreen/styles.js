@@ -6,4 +6,4 @@ export const Container = styled.SafeAreaView`
   align-items: center;
 `;
 
-export const ScreenText = styled.Text``;
+export const ProductName = styled.Text``;
