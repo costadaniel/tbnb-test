@@ -1,10 +1,11 @@
 import React from "react";
-import { Container, ScreenText } from "./styles";
+import { Container } from "./styles";
+import ProductCreationForm from "../../components/ProductCreationForm";
 
 export default function CreateProductScreen() {
   return (
     <Container>
-      <ScreenText>Create Product Screen</ScreenText>
+      <ProductCreationForm />
     </Container>
   );
 }

@@ -14,7 +14,7 @@ export default function Product({ props }) {
   return (
     <Container
       onPress={() => {
-        navigation.navigate("Product");
+        navigation.navigate("Product", { product: props });
       }}
     >
       <ProductName>{props.name}</ProductName>

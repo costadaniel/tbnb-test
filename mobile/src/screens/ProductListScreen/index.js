@@ -6,15 +6,25 @@ import { api } from "../../services/api";
 
 export default function ProductListScreen() {
   const [products, setProducts] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+
+  async function getProducts() {
+    try {
+      const { data } = await api.get("/");
+      setProducts(data);
+      setRefreshing(false);
+    } catch (error) {
+      console.log(error);
+      setRefreshing(false);
+    }
+  }
+
+  function handleRefresh() {
+    setRefreshing(true);
+    getProducts();
+  }
 
   useEffect(() => {
-    async function getProducts() {
-      try {
-        const { data } = await api.get("/");
-        setProducts(data);
-      } catch (error) {}
-    }
-
     getProducts();
   }, []);
 
@@ -24,6 +34,8 @@ export default function ProductListScreen() {
         data={products}
         renderItem={({ item }) => <Product props={item} />}
         keyExtractor={(item) => item.id.toString()}
+        refreshing={refreshing}
+        onRefresh={() => handleRefresh()}
       />
     </View>
   );

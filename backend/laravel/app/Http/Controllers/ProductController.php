@@ -23,7 +23,6 @@ class ProductController extends Controller
             ProductHistory::create([
                 'product_id' => $createdProduct->id,
                 'amount' => $createdProduct->quantity,
-                'type' => 'add'
             ]);
         }
         
@@ -43,6 +42,12 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $product = Product::findOrFail($id);
+
+        ProductHistory::create([
+            'product_id' => $product->id,
+            'amount' => $request->quantity,
+        ]);
+
         return $product->update($request->all());
     }
 
@@ -63,7 +68,6 @@ class ProductController extends Controller
             ProductHistory::create([
                 'product_id' => $updatedProduct->id,
                 'amount' => $updatedProduct->amount,
-                'type' => $updatedProduct->type
             ]);
         }
 

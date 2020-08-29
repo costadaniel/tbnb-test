@@ -1,15 +1,16 @@
 import styled from "styled-components/native";
 
-export const Container = styled.ScrollView`
+export const Container = styled.View`
+  align-self: stretch;
   padding-left: 20px;
   padding-right: 20px;
 `;
 
+export const FormContainer = styled.View``;
+
 export const Header = styled.Text`
   font-weight: bold;
   font-size: 22px;
-  padding-top: 10px;
-  padding-bottom: 10px;
 `;
 
 export const ProductAtt = styled.Text`
@@ -26,6 +27,4 @@ export const AttInput = styled.TextInput`
   padding: 8px;
 `;
 
-export const FormButton = styled.Button`
-  margin-bottom: 30px;
-`;
+export const FormButton = styled.Button``;

@@ -17,7 +17,6 @@ class CreateProductHistoriesTable extends Migration
             $table->id();
             $table->foreignId('product_id');
             $table->integer('amount');
-            $table->string('type'); // add, remove
             $table->timestamps();
         });
     }
