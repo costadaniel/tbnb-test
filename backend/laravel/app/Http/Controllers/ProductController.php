@@ -67,7 +67,7 @@ class ProductController extends Controller
 
             ProductHistory::create([
                 'product_id' => $updatedProduct->id,
-                'amount' => $updatedProduct->amount,
+                'amount' => $updatedProduct->quantity,
             ]);
         }
 
