@@ -5,16 +5,15 @@ namespace App\Managers;
 use App\Product;
 use App\ProductHistory;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class ProductManager
 {
-    public function getProducts()
+    public static function getProducts()
     {
         return Product::All();
     }
 
-    public function storeProduct(Request $request)
+    public static function storeProduct(Request $request)
     {
         $createdProduct = Product::create($request->all());
         
@@ -26,32 +25,55 @@ class ProductManager
         return $createdProduct;
     }
 
-    public function getProduct($id)
+    public static function getProduct($id)
     {
         return Product::find($id);
     }
 
-    public function getProductHistory($id)
+    public static function getProductHistory($id)
     {
-        return DB::table('product_histories')->where('product_id', $id)->get();
+        $product = Product::find($id);
+
+        if(!empty($product))
+            return $product->history;
+        else
+            return [];
     }
 
-    public function updateProduct(Product $product, $updatedProduct)
+    public static function updateProduct(Product $product, $updatedProduct)
     {
-        $product->update([
-            'name'        => $updatedProduct->name,
-            'description' => $updatedProduct->description,
-            'price'       => $updatedProduct->price,
-            'quantity'    => $updatedProduct->quantity,
-        ]);
+        if (array_key_exists('quantity', $updatedProduct)) {
+            if ($product->quantity != $updatedProduct['quantity']) {
+                ProductHistory::create([
+                    'product_id' => $product->id,
+                    'amount' => $updatedProduct['quantity']
+                ]);
+            }
+        }
+
+        $product->update($updatedProduct);
 
         return $product;
     }
 
-    public function destroyProduct(Product $product)
+    public static function destroyProduct(Product $product)
     {
         $product->delete();
         return $product;
+    }
+
+    public static function bulkUpdate($products)
+    {
+        $updatedProducts = [];
+
+        foreach($products as $updatedProduct) {
+            $product = Product::find($updatedProduct['id']);
+            $product = self::updateProduct($product, $updatedProduct);
+
+            array_push($updatedProducts, $product);
+        }
+
+        return $updatedProducts;
     }
 }
 
