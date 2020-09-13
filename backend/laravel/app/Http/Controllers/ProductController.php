@@ -26,7 +26,7 @@ class ProductController extends Controller
         $validator = Validator::make($request->all(), $this->productRules);
 
         if (!$validator->fails())
-            return response()->json(ProductManager::storeProduct($request), Response::HTTP_CREATED);
+            return response()->json(ProductManager::storeProduct($request->all()), Response::HTTP_CREATED);
         else
             return response()->json(['Error' => $validator->errors()], Response::HTTP_BAD_REQUEST);
     }

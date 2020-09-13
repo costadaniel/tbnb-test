@@ -4,7 +4,6 @@ namespace App\Managers;
 
 use App\Product;
 use App\ProductHistory;
-use Illuminate\Http\Request;
 
 class ProductManager
 {
@@ -13,9 +12,9 @@ class ProductManager
         return Product::All();
     }
 
-    public static function storeProduct(Request $request)
+    public static function storeProduct($request)
     {
-        $createdProduct = Product::create($request->all());
+        $createdProduct = Product::create($request);
         
         ProductHistory::create([
             'product_id' => $createdProduct->id,
