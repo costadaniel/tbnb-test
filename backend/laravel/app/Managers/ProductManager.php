@@ -31,7 +31,7 @@ class ProductManager
 
     public static function getProductHistory($id)
     {
-        $product = Product::find($id);
+        $product = self::getProduct($id);
 
         if(!empty($product))
             return $product->history;
