@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { DeviceEventEmitter } from "react-native";
+import { Alert, DeviceEventEmitter } from "react-native";
 import {
   Container,
   Header,
@@ -10,6 +10,7 @@ import {
 } from "./styles";
 import ProductHistory from "../../components/ProductHistory";
 
+import AsyncStorage from "@react-native-community/async-storage";
 import { api } from "../../services/api";
 
 export default function ProductScreen({ navigation, route }) {
@@ -34,7 +35,7 @@ export default function ProductScreen({ navigation, route }) {
     }
   }
 
-  async function handleDelete() {
+  async function deleteProduct() {
     try {
       await api.delete("/" + product.id);
 
@@ -45,17 +46,69 @@ export default function ProductScreen({ navigation, route }) {
     }
   }
 
-  async function handleUpdate() {
+  function handleDelete() {
+    Alert.alert("Attention", `You want to delete the product ${name}?`, [
+      {
+        text: "No",
+        onPress: () => null,
+      },
+      {
+        text: "Yes",
+        onPress: () => deleteProduct(),
+      },
+    ]);
+  }
+
+  async function getStorageProducts() {
+    let products;
+
     try {
-      await api.put("/" + product.id, {
-        name: name,
-        description: description,
-        price: price,
-        quantity: quantity,
-      });
+      products = await AsyncStorage.getItem("@products");
+      return products != null ? JSON.parse(products) : [];
+    } catch (error) {
+      console.log(error);
+      return [];
+    }
+  }
+
+  async function addProductToUpdateQueue() {
+    let products = await getStorageProducts();
+
+    await products.push({
+      key: products.length,
+      id: product.id,
+      name: name,
+      description: description,
+      price: price,
+      quantity: quantity,
+    });
+
+    try {
+      const jsonValue = JSON.stringify(products);
+      await AsyncStorage.setItem("@products", jsonValue);
+
+      DeviceEventEmitter.emit("getUpdatedProducts");
+      navigation.navigate("Products");
     } catch (error) {
       console.log(error);
     }
+  }
+
+  function handleUpdate() {
+    Alert.alert(
+      "Attention",
+      `You want to add the product ${name} to the update queue?`,
+      [
+        {
+          text: "No",
+          onPress: () => null,
+        },
+        {
+          text: "Yes",
+          onPress: () => addProductToUpdateQueue(),
+        },
+      ]
+    );
   }
 
   function handleNameInput(name) {
@@ -89,7 +142,7 @@ export default function ProductScreen({ navigation, route }) {
   }, []);
 
   return (
-    <Container>
+    <Container contentContainerStyle={{ paddingVertical: 20 }}>
       <Header>Product Details</Header>
 
       <ProductAtt>Product name</ProductAtt>
@@ -115,7 +168,7 @@ export default function ProductScreen({ navigation, route }) {
 
       <ProductAtt>Product quantity</ProductAtt>
       <ErrorText>
-        {validQuantity ? "" : "Required. Numeric bigger than or equal to 0."}
+        {validQuantity ? "" : "Required. Integer bigger than or equal to 0."}
       </ErrorText>
       <AttInput
         onChangeText={(text) => handleQuantityInput(text)}
@@ -124,7 +177,7 @@ export default function ProductScreen({ navigation, route }) {
       />
 
       <FormButton
-        title="Update Product"
+        title="Add Product to Update Queue"
         onPress={() => handleUpdate()}
         disabled={
           !(validName && validDescription && validQuantity && validPrice)

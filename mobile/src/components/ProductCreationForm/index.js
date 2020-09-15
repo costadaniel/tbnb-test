@@ -104,7 +104,7 @@ export default function ProductCreationForm() {
 
       <ProductAtt>Product Quantity</ProductAtt>
       <ErrorText>
-        {validQuantity ? "" : "Required. Numeric bigger than or equal to 0."}
+        {validQuantity ? "" : "Required. Integer bigger than or equal to 0."}
       </ErrorText>
       <AttInput
         onChangeText={(text) => handleQuantityInput(text)}

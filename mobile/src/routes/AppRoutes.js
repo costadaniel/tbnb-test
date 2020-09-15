@@ -6,6 +6,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import CreateProductScreen from "../screens/CreateProductScreen";
+import UpdateQueueScreen from "../screens/UpdateQueueScreen";
 import ProductRoute from "./ProductRoute";
 
 const Tab = createBottomTabNavigator();
@@ -28,6 +29,13 @@ export default function AppRoutes() {
             tabBarIcon: () => (
               <Feather name="file-plus" size={24} color="black" />
             ),
+          }}
+        />
+        <Tab.Screen
+          name="UpdateQueueScreen"
+          component={UpdateQueueScreen}
+          options={{
+            tabBarIcon: () => <Feather name="list" size={24} color="black" />,
           }}
         />
       </Tab.Navigator>
