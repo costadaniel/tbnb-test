@@ -29,3 +29,9 @@ export const AttInput = styled.TextInput`
 export const FormButton = styled.Button`
   margin-bottom: 30px;
 `;
+
+export const ErrorText = styled.Text`
+  font-weight: bold;
+  color: #f00;
+  font-size: 12px;
+`;

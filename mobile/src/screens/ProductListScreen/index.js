@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList } from "react-native";
+import { View, FlatList, DeviceEventEmitter } from "react-native";
 import Product from "../../components/Product";
 
 import { api } from "../../services/api";
@@ -26,16 +26,20 @@ export default function ProductListScreen() {
 
   useEffect(() => {
     getProducts();
+    DeviceEventEmitter.addListener("getProducts", () => getProducts());
+
+    return DeviceEventEmitter.removeListener("getProducts");
   }, []);
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <FlatList
         data={products}
         renderItem={({ item }) => <Product props={item} />}
         keyExtractor={(item) => item.id.toString()}
         refreshing={refreshing}
         onRefresh={() => handleRefresh()}
+        style={{ flexGrow: 1 }}
       />
     </View>
   );

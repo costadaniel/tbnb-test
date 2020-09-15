@@ -18,6 +18,12 @@ export const ProductAtt = styled.Text`
   font-size: 16px;
 `;
 
+export const ErrorText = styled.Text`
+  font-weight: bold;
+  color: #f00;
+  font-size: 12px;
+`;
+
 export const AttInput = styled.TextInput`
   background-color: #fff;
   border-color: #333;
